@@ -9,9 +9,13 @@ class adivinhaSenhaTeste(unittest.TestCase):
 
     def test_Hello_World(self):
         alvo = "Hello World"
-        self.advinha_senha(alvo)
+        self.adivinha_senha(alvo)
 
-    def advinha_senha(self, alvo):
+    def test_longo(self):
+        alvo = "O rato roeu a roupa do rei de Roma!!!"
+        self.adivinha_senha(alvo)
+
+    def adivinha_senha(self, alvo):
 
         iniciaTempo = datetime.datetime.now()
 
