@@ -22,7 +22,7 @@ class adivinhaSenhaTeste(unittest.TestCase):
         alvo = ''.join(random.choice(self.geneset) for _ in range(tamanho))
         self.adivinha_senha(alvo)
 
-    def test_benchmar(self):
+    def test_bk(self):
         genetico.Benchmark.run(self.test_Randomico)
 
     def adivinha_senha(self, alvo):
