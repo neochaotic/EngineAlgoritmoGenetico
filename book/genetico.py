@@ -1,39 +1,74 @@
 import random
+import statistics
+import time
+import sys
 
 
-def _mutacao(pais, geneSet):
-    indice = random.randrange(0, len(pais)) #funçao random.range(start,stop,step)
-    geneFilho = list(pais) #tranforma em lista
+def _mutacao(pais, geneSet,avalia_aptidao):
+    indice = random.randrange(0, len(pais.Genes)) #funçao random.range(start,stop,step)
+    geneFilho = list(pais.Genes) #tranforma em lista
     novoGene, alternar = random.sample(geneSet, 2) #atribuição multipla de variaveis
     geneFilho[indice] = alternar \
         if novoGene == geneFilho[indice] \
             else novoGene
-    return ''.join(geneFilho)
+    genes = ''.join(geneFilho)
+    aptidao = avalia_aptidao(genes)
+    return Cromossomo(genes, aptidao)
 
-def _gerar_pais(tamanho, geneSet):
+def _gerar_pais(tamanho, geneSet, avalia_aptidao):
     genes = []
     while len(genes) < tamanho:
         tamanhoAmostra = min(tamanho - len(genes), len(geneSet))
         genes.extend(random.sample(geneSet, tamanhoAmostra))
-    return ''.join(genes)
+    genes = ''.join(genes)
+    aptidao = avalia_aptidao(genes)
+    return Cromossomo(genes, aptidao)
+
 
 def oMelhor(avalia_aptidao, tamanhoAlvo, aptidaoOtima, geneSet, tela ):
     random.seed()
     #inicioTempo = datetime.datetime.now()
-    melhorPai = _gerar_pais(tamanhoAlvo, geneSet)
-    melhorAptidao = avalia_aptidao(melhorPai)
+    melhorPai = _gerar_pais(tamanhoAlvo, geneSet, avalia_aptidao)
+    #melhorAptidao = avalia_aptidao(melhorPai)
     tela(melhorPai)
-    if melhorAptidao >= aptidaoOtima:
+    if melhorPai.Aptidao >= aptidaoOtima:
         return melhorPai
 
     while True:
-        filho = _mutacao(melhorPai, geneSet)
-        aptidaoFilho = avalia_aptidao(filho)
+        filho = _mutacao(melhorPai, geneSet, avalia_aptidao)
 
-        if melhorAptidao >= aptidaoFilho:
+        #aptidaoFilho = avalia_aptidao(filho)
+
+        if melhorPai.Aptidao >= filho.Aptidao:
             continue
         tela(filho)
-        if aptidaoFilho >= aptidaoOtima:
+        if filho.Aptidao >= aptidaoOtima:
             return filho
-        melhorAptidao = aptidaoFilho
         melhorPai = filho
+
+class Cromossomo:
+    def __init__(self, genes, aptidao,):
+        self.Genes = genes
+        self.Aptidao = aptidao
+
+
+
+class Benchmark:
+    @staticmethod
+    def run(funcao):
+
+        cronometragem = []
+        stdout = sys.stdout
+        for i in range(100):
+            sys.stdout = None
+            iniciaTempo = time.time()
+            funcao()
+            segundos = time.time() #-startTime
+            sys.stdout = stdout
+            cronometragem.append(segundos)
+            media = statistics.mean(cronometragem)
+            if i < 10 or  i % 10 == 9:
+                print("{} {:3.2f} {:3.2f}".format(
+                    1 + i, media,
+                    statistics.stdev(cronometragem,media)
+                    if i > 1 else 0))
