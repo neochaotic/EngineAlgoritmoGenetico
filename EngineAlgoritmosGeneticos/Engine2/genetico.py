@@ -61,7 +61,7 @@ class Benchmark:
             sys.stdout = None
             iniciaTempo = time.time()
             funcao()
-            segundos = time.time() #-startTime
+            segundos = time.time() - iniciaTempo
             sys.stdout = stdout
             cronometragem.append(segundos)
             media = statistics.mean(cronometragem)

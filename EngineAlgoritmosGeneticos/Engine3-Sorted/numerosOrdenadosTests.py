@@ -20,9 +20,6 @@ class Aptidao:
 
 class NumerosOrdenadosTests(unittest.TestCase):
 
-    def test_benchmark(self):
-        genetico.Benchmark.run(lambda: self.ordena_numeros(40))
-
     def test_ordena_10_numeros(self):
         self.ordena_numeros(10)
 
@@ -40,6 +37,9 @@ class NumerosOrdenadosTests(unittest.TestCase):
         melhor = genetico.oMelhor(fnAptidao, totalNumeros,
                                   aptidaoOtima, geneset, fnTela)
         self.assertTrue(not aptidaoOtima > melhor.Aptidao)
+
+    def test_benchmark(self):
+        genetico.Benchmark.run(lambda: self.ordena_numeros(40))
 
 
 def avalia_apitidao(genes):
