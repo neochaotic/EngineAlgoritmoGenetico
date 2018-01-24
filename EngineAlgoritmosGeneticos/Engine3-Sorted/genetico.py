@@ -23,24 +23,22 @@ def _gerar_pais(tamanho, geneSet, avalia_aptidao):
     return Cromossomo(genes, aptidao)
 
 
-def oMelhor(avalia_aptidao, tamanhoAlvo, aptidaoOtima, geneSet, tela ):
+def oMelhor(avalia_aptidao, tamanhoAlvo,
+            aptidaoOtima, geneSet, tela):
     random.seed()
-    #inicioTempo = datetime.datetime.now()
     melhorPai = _gerar_pais(tamanhoAlvo, geneSet, avalia_aptidao)
-    #melhorAptidao = avalia_aptidao(melhorPai)
     tela(melhorPai)
-    if melhorPai.Aptidao >= aptidaoOtima:
+
+    if not aptidaoOtima > melhorPai.Aptidao:
         return melhorPai
 
     while True:
         filho = _mutacao(melhorPai, geneSet, avalia_aptidao)
 
-        #aptidaoFilho = avalia_aptidao(filho)
-
-        if melhorPai.Aptidao >= filho.Aptidao:
+        if not filho.Aptidao > melhorPai.Aptidao:
             continue
         tela(filho)
-        if filho.Aptidao >= aptidaoOtima:
+        if not  aptidaoOtima > filho.Aptidao:
             return filho
         melhorPai = filho
 
