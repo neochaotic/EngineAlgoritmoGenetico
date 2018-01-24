@@ -22,25 +22,31 @@ def _gerar_pais(tamanho, geneSet, avalia_aptidao):
     aptidao = avalia_aptidao(genes)
     return Cromossomo(genes, aptidao)
 
-
-def oMelhor(avalia_aptidao, tamanhoAlvo,
-            aptidaoOtima, geneSet, tela):
-    random.seed()
-    melhorPai = _gerar_pais(tamanhoAlvo, geneSet, avalia_aptidao)
-    tela(melhorPai)
-
-    if not aptidaoOtima > melhorPai.Aptidao:
-        return melhorPai
-
+def _obter_melhora(novo_filho, gerar_pais):
+    melhorPai = gerar_pais()
+    yield melhorPai
     while True:
-        filho = _mutacao(melhorPai, geneSet, avalia_aptidao)
-
-        if not filho.Aptidao > melhorPai.Aptidao:
+        filho = novo_filho(melhorPai)
+        if melhorPai.Aptidao > filho.Aptidao:
             continue
-        tela(filho)
-        if not  aptidaoOtima > filho.Aptidao:
-            return filho
+        if not filho.Aptidao > melhorPai.Aptidao:
+            melhorPai = filho
+            continue
+        yield filho
         melhorPai = filho
+
+def oMelhor(avaliaAptidao, tamanhoAlvo, aptidaoOtima, geneSet, tela):
+    random.seed()
+
+    def fnMutacao(pais):
+        return _mutacao(pais, geneSet, avaliaAptidao)
+    def fnGerarPais():
+        return _gerar_pais(tamanhoAlvo, geneSet, avaliaAptidao)
+
+    for melhora  in _obter_melhora(fnMutacao, fnGerarPais):
+        tela(melhora)
+        if not aptidaoOtima > melhora.Aptidao:
+            return melhora
 
 class Cromossomo:
     def __init__(self, genes, aptidao,):
