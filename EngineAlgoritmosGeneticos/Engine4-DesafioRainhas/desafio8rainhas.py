@@ -53,7 +53,7 @@ class OitoRainhasTests(unittest.TestCase):
         self.assertTrue(not aptidaoOtima > melhor.Aptidao)
 
     def test_benchmark(self):
-        genetico.Benchmark.run(lambda: self.test(10))
+        genetico.Benchmark.run(lambda: self.test(20))
 
 class Tabuleiro:
 

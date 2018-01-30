@@ -1,5 +1,6 @@
 import csv, datetime,unittest, genetico
 
+#fitness
 def avalia_aptidao(genes, regras, indiceEstadoLookup):
     regraAprovada = sum(1 for regra in regras
                         if regra.EValido(genes, indiceEstadoLookup))
@@ -38,7 +39,6 @@ class ColorindoGrafostests(unittest.TestCase):
         melhor =  genetico.oMelhor(fnAptidao, len(estados),
                                    valorOtimo, geneset, fnTela )
         self.assertTrue(not valorOtimo > melhor.Aptidao)
-
         chaves = sorted(estados.keys())
         for indice  in range (len(estados)):
             print (chaves[indice] + "é" +corLookup[melhor.Genes[indice]])
